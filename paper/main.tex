@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage{iclr2026_conference,times}
+\input{math_commands.tex}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+
+\title{Embodied Scale Law Exceptions: When Physical Regimes, Not Model Size, Set the Boundary}
+
+\author{Anonymous Authors}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Scaling laws in robotics are real enough to have become a new default expectation: more data, more parameters, and more embodiment diversity often improve performance. This paper argues for a narrower and more useful claim. In embodied intelligence, the scaling curve is piecewise, and the breakpoints are set by physical regime boundaries rather than by parameter count alone. We call these breakpoints \emph{embodied scale law exceptions}. The strongest exceptions appear when control moves from open-loop representation learning into contact-rich, safety-constrained, latency-sensitive, or morphology-fragmented interaction. In those regimes, larger models can still help, but they stop being the central mechanism because the dominant error source is no longer representational capacity; it is hybrid contact structure, delayed semantic alignment, or hardware-specific interaction constraints. We support this thesis with an adversarial literature synthesis over 1{,}500 robotics and embodied-AI papers and a small corpus analysis that shows contact-rich and morphology-related papers heavily outnumber generic scale-positive claims in the portion of the literature most relevant to our thesis. The contribution is intentionally modest: a field box, a regime map, and a claim boundary that future work can falsify. It is not a new robot policy, not a new benchmark, and not a claim that scaling never helps.
+\end{abstract}
+
+\section{Introduction}
+
+Robotics has started to import the scale-first intuition that transformed language and vision. Meta-analyses and task-specific studies now report power-law-like improvements with data, compute, model size, or embodiment diversity \citep{neural_scaling_robotics,data_scaling_il,embodiment_scaling_locomotion}. That is the right first-order story. But embodied systems do not merely predict tokens or labels. They negotiate contact, timing, safety, and morphology. Those variables can change the bottleneck.
+
+Our thesis is that scaling in embodied intelligence is \emph{regime-specific}. The field's default assumption is that if a larger model underperforms, the solution is still more scale or more diversity. We argue that this assumption breaks in physical regimes where the error source is not representation but interaction structure. In those regimes, the central mechanism changes. A larger model can be a better approximation, yet still fail to be the thing that matters most.
+
+We focus on the clearest exception family: contact-rich manipulation, safety-constrained control, sim-to-real transfer, and morphology-fragmented generalization. These areas repeatedly introduce task-specific mechanisms such as tactile state, force-aware adaptation, constraint handling, or regime decomposition. That recurrence is itself evidence that the underlying bottleneck differs from the one that scale laws capture cleanly.
+
+This paper makes three careful claims.
+\begin{itemize}
+    \item We identify a field assumption: embodied scaling curves are smooth enough to be treated as globally monotonic.
+    \item We show, by corpus-level synthesis, that the literature already splits into scale-positive and regime-fracture clusters.
+    \item We propose a boundary statement: scale laws in robotics should be reported and interpreted per physical regime, not only per aggregate benchmark.
+\end{itemize}
+
+\section{Field Box}
+
+We define the relevant field box as \emph{robot foundation model analysis for embodied physical intelligence}. The object of study is not just robot policies, but any learning system whose performance depends on perception, action, dynamics, and deployment physics. The core question is not "does scale help?" but "what sets the bottleneck in a given physical regime?"
+
+That framing includes robot foundation models, imitation learning, world models, multimodal tactile systems, sim-to-real adaptation, and generalist policies. It excludes pure benchmark chasing, pure language modeling, and generic ML scaling claims without an embodied control path.
+
+\section{Hidden Assumptions}
+
+The literature on robotics scaling often assumes at least one of the following.
+\begin{itemize}
+    \item Embodiment space is smoothly interpolable.
+    \item Contact mode boundaries can be averaged out.
+    \item Data diversity and data quantity are interchangeable beyond a threshold.
+    \item Safety failures are evaluation noise rather than a distinct bottleneck.
+    \item Latency is a nuisance, not a state variable.
+    \item Manipulation and locomotion can share one scaling curve.
+    \item Tactile, visual, and proprioceptive errors scale similarly.
+    \item Sim-to-real gaps are mostly visual.
+    \item World-model gains transfer cleanly to closed-loop control.
+    \item Larger models reduce brittleness instead of sometimes amplifying it.
+    \item Benchmark success implies deployment readiness.
+    \item Cross-embodiment generalization is the same as cross-task generalization.
+    \item Contact-rich behavior is just another point on the same curve.
+    \item Constraint handling can be postponed until after scale.
+    \item A single policy class can absorb morphology variation without regime indexing.
+    \item Performance curves are smooth across object classes.
+    \item Failure modes are independent across hardware, environment, and sensing latency.
+    \item Language grounding and force regulation scale together.
+    \item One can aggregate papers across regimes without stratifying by physical interaction complexity.
+    \item The right abstraction is model size first, regime second.
+\end{itemize}
+
+\section{Corpus Analysis}
+
+We harvested 3{,}767 Crossref hits from robotics-adjacent queries and filtered them to 1{,}500 titles and abstracts that are plausibly relevant to embodied intelligence. The full ranked table is saved in \texttt{docs/related\_work\_matrix.csv}. From that corpus, our simple title/abstract classifier counts the following clusters:
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Cluster & Count \\
+\midrule
+Contact-rich / force / tactile & 735 \\
+Morphology / embodiment / locomotion & 275 \\
+Scale-positive / power-law language & 142 \\
+Safety / constraint language & 86 \\
+World-model language & 70 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The counts are not a proof of anything. They are evidence that the literature already groups itself around physical regimes that are not interchangeable. The dominant surface area in our filtered corpus is contact-rich interaction, while explicit scaling language is comparatively sparse. That asymmetry is consistent with the thesis that physics-specific bottlenecks are a central concern rather than a corner case.
+
+\section{Why Scaling Stops Helping}
+
+We propose three regime-fracture mechanisms.
+
+\paragraph{Contact structure.}
+In contact-rich manipulation, the controller must react to mode switches, frictional uncertainty, and intermittent constraints. More scale can improve representation, but it does not eliminate the fact that the state is hybrid. The important variable is not only what the scene looks like, but what contact mode the robot is in.
+
+\paragraph{Latency-semantic mismatch.}
+If tactile or force evidence arrives late, the robot may act on a semantically stale sample. A bigger model may infer better priors, but it still faces the wrong timestamp. This is why delayed contact is not just noisy sensing; it is a state-alignment problem.
+
+\paragraph{Morphology fragmentation.}
+Embodiment diversity helps when the policy can share structure across bodies. It stops helping when the relevant variation is not just geometric but control-theoretic. Then the bottleneck is not "more embodiments" but "which regime the embodiment belongs to."
+
+\section{Strongest Idea}
+
+The strongest direction that emerges from the literature is not another scale law. It is a \emph{regime map}. Instead of asking for one universal exponent, we should partition embodied tasks by their physical interaction structure and report scaling separately within each partition. The exception mechanism is then explicit: the curve changes when the bottleneck changes.
+
+That direction is stronger than a generic "scaling has limits" story because it says when scale matters, when it stalls, and what kind of hidden variable is responsible. It is also stronger than a benchmark claim because the unit of analysis is physical regime, not leaderboard position.
+
+\section{What This Paper Is Not}
+
+This paper is not a new robot policy, not a reinforcement-learning method, not a new verifier, and not a claim that scale is useless. It does not prove a universal theorem. It does not settle the exact transition point for any robotics family. It does not claim that all failures in manipulation or locomotion come from the same source.
+
+\section{Limitations}
+
+The main limitation is that the evidence is largely corpus-level and abstract-level. We do not run a hardware study showing an exact regime boundary. The corpus analysis is also heuristic. It is useful for adversarial framing, but it should not be mistaken for a complete empirical map of robotics.
+
+\section{Conclusion}
+
+Embodied intelligence should not inherit a single universal scaling story from language models. The better claim is more conditional: scaling helps until physical interaction becomes the bottleneck, and then the model-size axis stops being the central mechanism. Recognizing that exception is not anti-scaling. It is the difference between a useful law and an overgeneralized one.
+
+\bibliographystyle{iclr2026_conference}
+\bibliography{references}
+
+\end{document}
