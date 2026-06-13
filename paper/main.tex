@@ -12,12 +12,13 @@
 \title{Embodied Scale Law Exceptions: When Physical Regimes, Not Model Size, Set the Boundary}
 
 \author{Anonymous Authors}
+\raggedbottom
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Scaling laws in robotics are real enough to have become a new default expectation: more data, more parameters, and more embodiment diversity often improve performance. This paper argues for a narrower and more useful claim. In embodied intelligence, the scaling curve is piecewise, and the breakpoints are set by physical regime boundaries rather than by parameter count alone. We call these breakpoints \emph{embodied scale law exceptions}. The strongest exceptions appear when control moves from open-loop representation learning into contact-rich, safety-constrained, latency-sensitive, or morphology-fragmented interaction. In those regimes, larger models can still help, but they stop being the central mechanism because the dominant error source is no longer representational capacity; it is hybrid contact structure, delayed semantic alignment, or hardware-specific interaction constraints. We support this thesis with an adversarial literature synthesis over 1{,}500 robotics and embodied-AI papers and a small corpus analysis that shows contact-rich and morphology-related papers heavily outnumber generic scale-positive claims in the portion of the literature most relevant to our thesis. The contribution is intentionally modest: a field box, a regime map, and a claim boundary that future work can falsify. It is not a new robot policy, not a new benchmark, and not a claim that scaling never helps.
+Scaling laws in robotics are real enough to have become a new default expectation: more data, more parameters, and more embodiment diversity often improve performance. This paper argues for a narrower and more useful claim. In embodied intelligence, the scaling curve is piecewise, and the breakpoints are set by physical regime boundaries rather than by parameter count alone. We call these breakpoints \emph{embodied scale law exceptions}. The strongest exceptions appear when control moves from open-loop representation learning into contact-rich, safety-constrained, latency-sensitive, or morphology-fragmented interaction. In those regimes, larger models can still help, but they stop being the central mechanism because the dominant error source is no longer representational capacity; it is hybrid contact structure, delayed semantic alignment, or hardware-specific interaction constraints. We support this thesis with an adversarial literature synthesis over 1{,}500 robotics and embodied-AI papers. V2 hardening adds a keyword-sensitivity audit: under baseline terms, physical-regime language is 7.11 times scale language, but under scale-favorable terms the ratio falls to 1.15 with a 0.93 bootstrap win rate. The contribution is intentionally modest and workshop-level: a field box, a regime map, and a claim boundary that future work can falsify.
 \end{abstract}
 
 \section{Introduction}
@@ -34,6 +35,9 @@ This paper makes three careful claims.
     \item We show, by corpus-level synthesis, that the literature already splits into scale-positive and regime-fracture clusters.
     \item We propose a boundary statement: scale laws in robotics should be reported and interpreted per physical regime, not only per aggregate benchmark.
 \end{itemize}
+
+\paragraph{Submission-hardening note.}
+Submission-hardening version: v2. Decision: workshop-only. The corpus analysis is a sensitivity-checked framing, not an empirical scaling law. Keyword choices change the ratio substantially, so the paper should not claim a measured robotics scaling exponent or a complete regime map.
 
 \section{Field Box}
 
@@ -87,6 +91,16 @@ World-model language & 70 \\
 
 The counts are not a proof of anything. They are evidence that the literature already groups itself around physical regimes that are not interchangeable. The dominant surface area in our filtered corpus is contact-rich interaction, while explicit scaling language is comparatively sparse. That asymmetry is consistent with the thesis that physics-specific bottlenecks are a central concern rather than a corner case.
 
+\begin{table}[t]
+\centering
+\small
+\input{v2_corpus_sensitivity_table.tex}
+\caption{V2 corpus-sensitivity audit. Physical-regime language remains more frequent than scale language, but the ratio is highly sensitive to keyword definitions.}
+\label{tab:v2-corpus}
+\end{table}
+
+Table~\ref{tab:v2-corpus} is the hostile check. Under scale-favorable keywords, physical-regime language is only 1.15 times scale language and the bootstrap win rate falls to 0.93. The qualitative framing survives, but the counts are not stable enough to support a strong empirical prevalence claim.
+
 \section{Why Scaling Stops Helping}
 
 We propose three regime-fracture mechanisms.
@@ -112,7 +126,7 @@ This paper is not a new robot policy, not a reinforcement-learning method, not a
 
 \section{Limitations}
 
-The main limitation is that the evidence is largely corpus-level and abstract-level. We do not run a hardware study showing an exact regime boundary. The corpus analysis is also heuristic. It is useful for adversarial framing, but it should not be mistaken for a complete empirical map of robotics.
+The main limitation is that the evidence is largely corpus-level and abstract-level. We do not run a hardware study showing an exact regime boundary. The corpus analysis is also heuristic, and v2 shows its ratios depend strongly on keyword choices. It is useful for adversarial framing, but it should not be mistaken for a complete empirical map of robotics.
 
 \section{Conclusion}
 

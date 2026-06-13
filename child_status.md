@@ -1,13 +1,21 @@
 # Child Status 57
 
-Status: recovered_success
-Attempt: 2
-Stage: manual recovery complete
-PDF: C:/Users/wangz/Downloads/57.pdf
-Desktop PDF: C:/Users/wangz/OneDrive/Desktop/57.pdf
-Repository: https://github.com/Jason-Wang313/57_embodied_scale_law_exceptions
+Status: workshop_only
+Attempt: 3
+Stage: v2_submission_hardening
 
-Recovery notes:
-- Reused the completed corpus sweep, ranking artifacts, manuscript, and bibliography.
-- Fixed the LaTeX path escaping issue that stopped compilation.
-- Rebuilt the paper with pdflatex, bibtex, pdflatex, pdflatex.
+Current facts:
+- Literature sweep rows: 1,500.
+- Original baseline counts: scale-positive 142, contact-rich 735, morphology 275.
+- V2 baseline physical/scale ratio: 7.11, bootstrap win rate 1.00.
+- V2 strict-terms physical/scale ratio: 19.87, bootstrap win rate 1.00.
+- V2 scale-favorable physical/scale ratio: 1.15, bootstrap win rate 0.93.
+- Canonical PDF target: `C:/Users/wangz/Downloads/57.pdf`.
+- Canonical PDF size: 87128 bytes.
+- Local generated `paper/main.pdf` is removed after build.
+- Desktop PDF copy is absent.
+
+Decision:
+- Workshop-only. The regime-map framing is useful, but the corpus ratios are keyword-sensitive and not a hardware scaling study.
+
+End time: 2026-06-13 13:38:22 +01:00
