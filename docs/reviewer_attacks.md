@@ -1,16 +1,17 @@
 # Reviewer Attacks
 
-- "This is just a literature review and rebranding of scaling laws."
-- "The paper does not prove a new theorem or train a new robot policy."
-- "The regime split is subjective and not operationalized enough."
-- "Contact-rich manipulation is an obvious bottleneck; the paper adds no mechanism."
-- "The evidence is largely abstract-level and may overfit titles/abstracts."
-- "The exception story could just be data scarcity in disguise."
-- "The paper does not separate model scale from data quality, hardware, and benchmark design."
-- "The central mechanism is descriptive rather than predictive."
+## Attack: The corpus classifier is keyword fragile.
 
-Preemptive answers:
-- Be explicit that the contribution is an adversarial synthesis with runnable corpus analysis.
-- Separate what is demonstrated from what is conjectured.
-- Show that contact/morphology/safety terms cluster away from generic scale-positive claims.
-- Keep the paper honest about the absence of hardware experiments.
+Sustained. V2 scale-favorable terms reduce the physical/scale ratio from 7.11 to 1.15.
+
+## Attack: This is not a hardware scaling study.
+
+Sustained. The paper remains a corpus synthesis and regime-map proposal.
+
+## Attack: The paper could be read as anti-scaling.
+
+Sustained unless carefully framed. The manuscript now says scale helps in some regimes and that exceptions must be stratified.
+
+## Attack: The regime map is incomplete.
+
+Sustained. Decision: workshop-only.

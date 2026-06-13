@@ -5,4 +5,4 @@
 3. Deep-read 200-250 of the most relevant papers and extract mechanism-level notes for novelty boundaries.
 4. Build a 100-paper hostile prior-work set that most strongly threatens the eventual thesis.
 5. Synthesize the field box, hidden assumptions, and candidate directions, then choose the strongest thesis.
-6. Draft the paper, claims, reviewer attacks, and final audit; compile the ICLR-style PDF and package the repo.
+6. Draft the paper, claims, reviewer attacks, and final audit; compile and verify the canonical PDF at `C:/Users/wangz/Downloads/57.pdf`; do not copy to Desktop.

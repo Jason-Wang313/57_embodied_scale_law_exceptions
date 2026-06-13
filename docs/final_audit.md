@@ -1,20 +1,29 @@
 # Final Audit
 
-Status: recovered success.
+Paper-readiness judgment: workshop-only.
 
-Verification:
-- Literature sweep contains 1,500 filtered robotics and embodied-AI rows.
+## Original Thesis
+
+Robotics scaling curves should be interpreted per physical regime rather than as a single global model-size story.
+
+## V1 Evidence
+
+- Literature sweep rows: 1,500.
+- Baseline counts: scale-positive 142, contact-rich 735, morphology 275.
 - Serious skim, deep-read, and hostile-prior CSVs exist.
-- Corpus analysis exists at `docs/corpus_analysis.json`.
-- Manuscript source exists at `paper/main.tex`.
-- Bibliography exists at `paper/references.bib`.
-- The paper compiles with `pdflatex`, `bibtex`, `pdflatex`, `pdflatex`.
-- Final PDF is `paper/main.pdf`.
 
-Recovery:
-- The failed attempt had already drafted the manuscript and bibliography.
-- The build failure was a LaTeX path escaping issue in `\texttt{docs/related\_work\_matrix.csv}`.
-- The path was corrected and the PDF rebuilt cleanly.
+## V2 Corpus Sensitivity
 
-Known limitation:
-- The paper is an adversarial corpus synthesis rather than a hardware scaling study; the proposed regime map should be treated as a falsifiable framing.
+- Baseline keywords: physical-regime count 1,010, scale count 142, ratio 7.11, bootstrap win rate 1.00.
+- Strict terms: physical-regime count 298, scale count 15, ratio 19.87, bootstrap win rate 1.00.
+- Scale-favorable terms: physical-regime count 268, scale count 233, ratio 1.15, bootstrap win rate 0.93.
+
+## Decision
+
+Workshop-only. The field framing is useful, but the evidence is corpus-level and keyword-sensitive. It should not be presented as a measured robotics scaling law or a complete physical-regime taxonomy.
+
+## Artifact Policy
+
+- Canonical PDF: `C:/Users/wangz/Downloads/57.pdf`
+- Local tracked/generated PDF policy: `paper/main.pdf` is ignored and removed after build.
+- Desktop copy: absent.

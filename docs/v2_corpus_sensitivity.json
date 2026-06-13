@@ -1,0 +1,51 @@
+{
+  "decision": "workshop-only",
+  "reason": "Corpus synthesis is sensitive to keyword definitions; physical-regime language remains above scale language, but exact ratios are not stable enough for a strong empirical claim.",
+  "summary": [
+    {
+      "variant": "baseline",
+      "rows": 1500,
+      "scale": 142,
+      "contact": 735,
+      "morphology": 275,
+      "physical_regime": 1010,
+      "physical_to_scale_ratio": 7.112676056338028,
+      "contact_to_scale_ratio": 5.176056338028169,
+      "bootstrap_n": 400,
+      "physical_gt_scale_rate": 1.0,
+      "ratio_p05": 6.248366013071895,
+      "ratio_p50": 7.056338028169014,
+      "ratio_p95": 8.28225806451613
+    },
+    {
+      "variant": "strict_terms",
+      "rows": 1500,
+      "scale": 15,
+      "contact": 226,
+      "morphology": 72,
+      "physical_regime": 298,
+      "physical_to_scale_ratio": 19.866666666666667,
+      "contact_to_scale_ratio": 15.066666666666666,
+      "bootstrap_n": 400,
+      "physical_gt_scale_rate": 1.0,
+      "ratio_p05": 13.590909090909092,
+      "ratio_p50": 19.785714285714285,
+      "ratio_p95": 32.333333333333336
+    },
+    {
+      "variant": "scale_favorable",
+      "rows": 1500,
+      "scale": 233,
+      "contact": 223,
+      "morphology": 45,
+      "physical_regime": 268,
+      "physical_to_scale_ratio": 1.150214592274678,
+      "contact_to_scale_ratio": 0.9570815450643777,
+      "bootstrap_n": 400,
+      "physical_gt_scale_rate": 0.93,
+      "ratio_p05": 0.9883268482490273,
+      "ratio_p50": 1.1497797356828194,
+      "ratio_p95": 1.3408071748878925
+    }
+  ]
+}

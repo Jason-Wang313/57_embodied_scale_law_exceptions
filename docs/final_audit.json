@@ -1,0 +1,12 @@
+{
+  "paper": 57,
+  "decision": "workshop-only",
+  "canonical_pdf": "C:/Users/wangz/Downloads/57.pdf",
+  "key_result": "Corpus sensitivity shows the physical-regime/scale ratio drops from 7.11 baseline to 1.15 under scale-favorable keywords.",
+  "v2_metrics": {
+    "baseline_ratio": 7.112676056338028,
+    "baseline_bootstrap_win": 1.0,
+    "scale_favorable_ratio": 1.150214592274678,
+    "scale_favorable_bootstrap_win": 0.9333333333333333
+  }
+}
