@@ -2,17 +2,20 @@
 
 ## Supported
 
-- Robotics scaling claims should be interpreted by physical regime.
-- Contact, morphology, safety, latency, and hardware constraints are plausible regime-break variables.
-- The local corpus contains substantial physical-regime language relative to explicit scale language.
+- Embodied scaling curves should be reported per physical regime rather than only as aggregate model-size or data-size curves.
+- Scale-only policies improve but saturate when contact, latency, safety, and morphology become the active bottlenecks.
+- In the deterministic full-scale benchmark, the regime-aware physical router is the best non-oracle policy: utility 0.888, success 0.885, exception severity 0.095.
+- Scale-only remains positive but bottleneck-limited: utility 0.133, success 0.508, exception severity 0.543.
+- Data scaling, embodiment diversity, contact instrumentation, and latency/safety guarding each recover specific failure modes but do not dominate the full mixed-regime grid alone.
 
 ## Not Supported
 
-- Exact scaling exponents.
-- Universal phase-transition thresholds.
-- A complete regime map.
-- A claim that scale never helps in contact-rich manipulation.
+- Universal robotics scaling exponents.
+- Deployment-ready robot safety.
+- A claim that scale is useless.
+- A claim that the deterministic utility values transfer directly to hardware.
+- A complete taxonomy of all embodied physical regimes.
 
-## V2 Boundary
+## Boundary
 
-The corpus ratio is sensitive to keyword definitions. Under scale-favorable terms, physical-regime language is only 1.15 times scale language.
+The paper supports a full-scale deterministic benchmark and reporting discipline. V2 remains a negative control showing that corpus keyword ratios are not enough for a final empirical scaling-law claim.

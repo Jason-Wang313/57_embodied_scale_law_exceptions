@@ -1,7 +1,7 @@
 # Novelty Decision
 
-Decision after v2 hardening: workshop-only.
+Decision after v3 full-scale hardening: final submission candidate.
 
-Reason: The regime-map framing is useful, but the corpus analysis is keyword-sensitive and abstract-level. V2 confirms the paper should be a falsifiable field box, not an empirical scaling-law claim.
+Reason: the paper now moves beyond corpus synthesis and provides a deterministic full-scale benchmark showing that aggregate scale-only policies improve but saturate under physical bottlenecks, while a regime-aware physical router is the best non-oracle policy.
 
-Novelty boundary: present the contribution as an adversarial synthesis and reporting recommendation for stratified robotics scaling studies.
+Novelty boundary: present the contribution as a benchmark and reporting discipline for regime-conditioned embodied scaling, not as a universal scaling theorem or real-robot safety result.

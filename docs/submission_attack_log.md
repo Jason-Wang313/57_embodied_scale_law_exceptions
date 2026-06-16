@@ -1,15 +1,21 @@
 # Submission Attack Log
 
-## Attack: keyword sensitivity
+## Attack: corpus ratios are not enough
 
-Result: Sustained. Scale-favorable terms reduce the physical/scale ratio to 1.15.
+Result: sustained. V2 keyword sensitivity remains as a negative control.
 
-Decision impact: workshop-only.
+Decision impact: final evidence is the v3 full-scale benchmark, not corpus prevalence.
 
-## Attack: no hardware scaling evidence
+## Attack: scale-only is unfairly punished
 
-Result: Sustained. The paper is a field box and regime-map proposal.
+Result: answered. Scale-only remains positive, improves with model scale, and reaches utility 0.312 in representation-smooth regimes. It saturates under mixed physical shift because physical residuals remain.
 
-## Attack: overclaiming anti-scaling
+Decision impact: final claim is regime-conditioned scaling, not anti-scaling.
 
-Result: Sustained. The paper now emphasizes that scale helps in some regimes.
+## Attack: physical router is too close to an oracle
+
+Result: answered. The router has residual exception severity 0.095 and utility 0.888, while the oracle is an upper bound with utility 1.000. The gap is headroom for learned bottleneck inference.
+
+## Attack: synthetic benchmark cannot prove real robots
+
+Result: sustained. The paper states real robot logs and regime annotations as future work.

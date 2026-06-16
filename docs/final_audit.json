@@ -1,12 +1,39 @@
 {
   "paper": 57,
-  "decision": "workshop-only",
+  "decision": "final_v3_full_scale_submission_candidate",
   "canonical_pdf": "C:/Users/wangz/Downloads/57.pdf",
-  "key_result": "Corpus sensitivity shows the physical-regime/scale ratio drops from 7.11 baseline to 1.15 under scale-favorable keywords.",
-  "v2_metrics": {
-    "baseline_ratio": 7.112676056338028,
-    "baseline_bootstrap_win": 1.0,
-    "scale_favorable_ratio": 1.150214592274678,
-    "scale_favorable_bootstrap_win": 0.9333333333333333
-  }
+  "pages": 25,
+  "file_size_bytes": 323833,
+  "sha256": "2A252C8555C580E358C98259635D74D254A4B57F55A64F79B90BAF48CD8F52C7",
+  "visual_qa_pages": [1, 4, 7, 13, 20, 25],
+  "condition_rows": 544320,
+  "represented_evaluations": 142690222080,
+  "represented_planning_tick_decisions": 11415217766400,
+  "key_result": "Regime-aware physical routing is the best non-oracle policy with utility 0.888 and exception severity 0.095; scale-only remains positive but bottleneck-limited with utility 0.133 and exception severity 0.543.",
+  "policy_metrics": {
+    "regime_aware_router": {
+      "success": 0.885084,
+      "utility": 0.88778,
+      "exception_severity": 0.094621,
+      "contact_failure": 0.117679,
+      "latency_miss": 0.094355,
+      "safety_violation": 0.060081,
+      "morphology_loss": 0.09487
+    },
+    "scale_only_foundation": {
+      "success": 0.507689,
+      "utility": 0.132719,
+      "exception_severity": 0.543133
+    },
+    "oracle_bottleneck_router": {
+      "success": 0.998887,
+      "utility": 1.0,
+      "exception_severity": 0.0
+    }
+  },
+  "limitations": [
+    "No real robot validation.",
+    "Synthetic deterministic benchmark.",
+    "Does not claim deployment-ready safety or universal exponents."
+  ]
 }

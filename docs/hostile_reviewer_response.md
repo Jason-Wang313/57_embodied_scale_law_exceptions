@@ -1,5 +1,7 @@
 # Hostile Reviewer Response
 
-The strongest criticism is correct: the corpus counts depend on keyword definitions. V2 hardening shows the physical-regime/scale ratio falls to 1.15 under scale-favorable keywords.
+The strongest criticism of v2 was correct: corpus keyword ratios are not enough to support a final scaling-law claim. V3 answers by making the corpus audit a negative control and adding a deterministic full-scale benchmark over 544,320 compact rows.
 
-The revised manuscript therefore presents a workshop-level field framing, not a measured scaling law. A stronger paper would need stratified benchmark or hardware scaling curves.
+The final result is not anti-scaling. Scale-only remains positive and improves with model size, but its utility saturates because physical residuals remain. The regime-aware physical router is the best non-oracle policy because it targets contact, latency, safety, and morphology bottlenecks directly.
+
+The remaining criticism is also correct: this is not real robot validation. The manuscript states that limitation and frames the contribution as a benchmark and reporting discipline.

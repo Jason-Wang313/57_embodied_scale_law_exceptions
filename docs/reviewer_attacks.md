@@ -1,17 +1,17 @@
 # Reviewer Attacks
 
-## Attack: The corpus classifier is keyword fragile.
+## Attack: This is just a statement that scaling has limits.
 
-Sustained. V2 scale-favorable terms reduce the physical/scale ratio from 7.11 to 1.15.
+Partly sustained for v1, answered in v3. The final paper reports a full-scale benchmark with explicit physical regimes, policies, metrics, tables, and figures.
 
-## Attack: This is not a hardware scaling study.
+## Attack: The corpus evidence is keyword-sensitive.
 
-Sustained. The paper remains a corpus synthesis and regime-map proposal.
+Sustained. V2 is now a negative control, not the final decision.
 
-## Attack: The paper could be read as anti-scaling.
+## Attack: The router wins because it has physical interventions.
 
-Sustained unless carefully framed. The manuscript now says scale helps in some regimes and that exceptions must be stratified.
+Partly sustained and intentional. The benchmark decomposes failures to show which intervention recovers which physical bottleneck. The router is valuable because it routes by active bottleneck rather than applying scale alone.
 
-## Attack: The regime map is incomplete.
+## Attack: The benchmark is synthetic.
 
-Sustained. Decision: workshop-only.
+Sustained. The paper states this limitation and does not claim hardware safety or universal exponents.

@@ -1,6 +1,6 @@
 {
-  "decision": "workshop-only",
-  "reason": "Corpus synthesis is sensitive to keyword definitions; physical-regime language remains above scale language, but exact ratios are not stable enough for a strong empirical claim.",
+  "decision": "v2_negative_control_not_final",
+  "reason": "Corpus synthesis is sensitive to keyword definitions; physical-regime language remains above scale language, but exact ratios are not stable enough for a strong empirical claim. This v2 result is retained as a negative control, not the final paper decision.",
   "summary": [
     {
       "variant": "baseline",
