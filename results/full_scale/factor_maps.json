@@ -1,0 +1,62 @@
+{
+  "task": {
+    "t00": "pick-and-place",
+    "t01": "peg insertion",
+    "t02": "cable deformable manipulation",
+    "t03": "dexterous in-hand rotation",
+    "t04": "legged locomotion",
+    "t05": "mobile manipulation",
+    "t06": "human-shared workspace",
+    "t07": "tool-use manipulation"
+  },
+  "regime": {
+    "r00": "representation smooth",
+    "r01": "contact rich",
+    "r02": "safety constrained",
+    "r03": "latency sensitive",
+    "r04": "morphology shifted",
+    "r05": "mixed physical shift"
+  },
+  "model_scale": {
+    "m00": "0.3B",
+    "m01": "1B",
+    "m02": "3B",
+    "m03": "10B",
+    "m04": "30B"
+  },
+  "data_scale": {
+    "d00": "1x",
+    "d01": "3x",
+    "d02": "10x",
+    "d03": "30x"
+  },
+  "embodiment_diversity": {
+    "e00": "narrow",
+    "e01": "matched",
+    "e02": "broad"
+  },
+  "contact": {
+    "c00": "low contact",
+    "c01": "mode switches",
+    "c02": "discontinuous contact"
+  },
+  "latency": {
+    "l00": "20 ms",
+    "l01": "80 ms",
+    "l02": "240 ms"
+  },
+  "safety": {
+    "s00": "loose safety",
+    "s01": "moderate safety",
+    "s02": "tight safety"
+  },
+  "policy": {
+    "scale_only_foundation": "Scale-only foundation policy",
+    "data_scaled_foundation": "Data-scaled foundation policy",
+    "embodiment_diverse_scaling": "Embodiment-diverse scaling policy",
+    "contact_instrumented": "Contact-instrumented policy",
+    "latency_safety_guarded": "Latency/safety guarded policy",
+    "regime_aware_router": "Regime-aware physical router",
+    "oracle_bottleneck_router": "Oracle bottleneck router"
+  }
+}

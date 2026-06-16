@@ -1,8 +1,12 @@
 # Plan
 
-1. Build a 1000-paper landscape sweep centered on embodied scale-law exceptions in robotics and embodied intelligence.
-2. Narrow to a 300-paper serious skim focused on scaling failure modes, regime shifts, and robotics-specific assumptions.
-3. Deep-read 200-250 of the most relevant papers and extract mechanism-level notes for novelty boundaries.
-4. Build a 100-paper hostile prior-work set that most strongly threatens the eventual thesis.
-5. Synthesize the field box, hidden assumptions, and candidate directions, then choose the strongest thesis.
-6. Draft the paper, claims, reviewer attacks, and final audit; compile and verify the canonical PDF at `C:/Users/wangz/Downloads/57.pdf`; do not copy to Desktop.
+1. Preserve the v2 corpus-sensitivity audit as a negative control showing that keyword ratios alone are not enough for a final submission claim.
+2. Add a RAM-light deterministic full-scale benchmark over task family, physical regime, model scale, data scale, embodiment diversity, contact severity, latency, safety tightness, and policy family.
+3. Stream compact condition rows and online aggregates to `results/full_scale/` without loading the full condition CSV into memory.
+4. Generate full-scale tables, figures, validation JSON, and policy/regime summaries.
+5. Rewrite the manuscript around the final positive claim: scale helps inside regimes, but contact, latency, safety, and morphology create measurable exception boundaries where physical intervention or regime routing beats scale-only extrapolation.
+6. Expand to at least 25 pages before final export.
+7. Update `build_pdf.ps1` to enforce the page threshold, record size/hash/page count in ASCII JSON, copy only the final artifact to `C:/Users/wangz/Downloads/57.pdf`, and remove `paper/main.pdf`.
+8. Render the Downloads PDF for visual QA, update all status docs, run stale scans and validation checks, then commit and push only after the repo is clean.
+
+Execution status: complete for v3 full-scale final candidate. Final PDF is 25 pages at `C:/Users/wangz/Downloads/57.pdf`.

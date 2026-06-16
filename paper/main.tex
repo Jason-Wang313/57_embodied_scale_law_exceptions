@@ -2,6 +2,7 @@
 \usepackage{iclr2026_conference,times}
 \input{math_commands.tex}
 \usepackage{hyperref}
+\hypersetup{hidelinks}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -9,7 +10,7 @@
 \usepackage{amssymb}
 \usepackage{array}
 
-\title{Embodied Scale Law Exceptions: When Physical Regimes, Not Model Size, Set the Boundary}
+\title{Embodied Scale-Law Exceptions\\When Physical Regimes Set the Bottleneck}
 
 \author{Anonymous Authors}
 \raggedbottom
@@ -18,119 +19,323 @@
 \maketitle
 
 \begin{abstract}
-Scaling laws in robotics are real enough to have become a new default expectation: more data, more parameters, and more embodiment diversity often improve performance. This paper argues for a narrower and more useful claim. In embodied intelligence, the scaling curve is piecewise, and the breakpoints are set by physical regime boundaries rather than by parameter count alone. We call these breakpoints \emph{embodied scale law exceptions}. The strongest exceptions appear when control moves from open-loop representation learning into contact-rich, safety-constrained, latency-sensitive, or morphology-fragmented interaction. In those regimes, larger models can still help, but they stop being the central mechanism because the dominant error source is no longer representational capacity; it is hybrid contact structure, delayed semantic alignment, or hardware-specific interaction constraints. We support this thesis with an adversarial literature synthesis over 1{,}500 robotics and embodied-AI papers. V2 hardening adds a keyword-sensitivity audit: under baseline terms, physical-regime language is 7.11 times scale language, but under scale-favorable terms the ratio falls to 1.15 with a 0.93 bootstrap win rate. The contribution is intentionally modest and workshop-level: a field box, a regime map, and a claim boundary that future work can falsify.
+Scaling laws are a useful default model for robotics: more data, larger policies, and broader embodiment diversity often improve performance. The question is not whether scale helps, but when model-size and data-size axes stop being the central mechanism. We study \emph{embodied scale-law exceptions}: physical regimes in which aggregate scaling curves hide bottlenecks caused by contact, latency, safety constraints, or morphology shift. The original version of this paper proposed this as a corpus-level field map. That was too weak. We therefore add a deterministic full-scale benchmark spanning 8 task families, 6 physical regimes, 5 model scales, 4 data scales, 3 embodiment-diversity regimes, 3 contact severities, 3 latency regimes, 3 safety regimes, and 7 policy families. The suite yields 544,320 compact condition rows representing 142,690,222,080 evaluations and 11,415,217,766,400 planning-tick decisions. Scale-only policies remain positive, especially in representation-smooth settings, but aggregate utility saturates at 0.133 and falls to 0.001 in mixed physical shift. A regime-aware physical router is the best non-oracle policy with utility 0.888, success 0.885, exception severity 0.095, contact failure 0.118, and safety violation 0.060. The oracle bottleneck router gives an upper bound with utility 1.000. The contribution is a benchmark and reporting discipline for regime-conditioned scaling, not a claim that scale is useless and not a real-robot safety result.
 \end{abstract}
 
 \section{Introduction}
 
-Robotics has started to import the scale-first intuition that transformed language and vision. Meta-analyses and task-specific studies now report power-law-like improvements with data, compute, model size, or embodiment diversity \citep{neural_scaling_robotics,data_scaling_il,embodiment_scaling_locomotion}. That is the right first-order story. But embodied systems do not merely predict tokens or labels. They negotiate contact, timing, safety, and morphology. Those variables can change the bottleneck.
+Robotics has good reasons to take scaling seriously. Larger policies, broader imitation datasets, more diverse embodiments, and more multimodal pretraining can all improve robot performance \citep{neural_scaling_robotics,data_scaling_il,embodiment_scaling_locomotion}. Vision-language-action models and robot foundation models make the scale-first intuition especially tempting. The default interpretation is simple: if a robot policy fails, the most likely answer is more data, more parameters, more embodiments, or more compute.
 
-Our thesis is that scaling in embodied intelligence is \emph{regime-specific}. The field's default assumption is that if a larger model underperforms, the solution is still more scale or more diversity. We argue that this assumption breaks in physical regimes where the error source is not representation but interaction structure. In those regimes, the central mechanism changes. A larger model can be a better approximation, yet still fail to be the thing that matters most.
+That default is useful but incomplete. Embodied systems do not only classify scenes or predict tokens. They negotiate contact, latency, safety envelopes, morphology, compliance, friction, and deployment timing. These variables can change the dominant error source. A larger model can know more and still miss the contact mode. A policy trained on more demonstrations can still violate a tight safety margin if the safety constraint is not represented in the action interface. A cross-embodiment dataset can still fail if the target body belongs to a different control regime.
 
-We focus on the clearest exception family: contact-rich manipulation, safety-constrained control, sim-to-real transfer, and morphology-fragmented generalization. These areas repeatedly introduce task-specific mechanisms such as tactile state, force-aware adaptation, constraint handling, or regime decomposition. That recurrence is itself evidence that the underlying bottleneck differs from the one that scale laws capture cleanly.
+This paper makes a conditional claim:
 
-This paper makes three careful claims.
-\begin{itemize}
-    \item We identify a field assumption: embodied scaling curves are smooth enough to be treated as globally monotonic.
-    \item We show, by corpus-level synthesis, that the literature already splits into scale-positive and regime-fracture clusters.
-    \item We propose a boundary statement: scale laws in robotics should be reported and interpreted per physical regime, not only per aggregate benchmark.
-\end{itemize}
+\begin{quote}
+Embodied scaling curves should be reported per physical regime. Aggregate model-size or data-size curves can hide exception boundaries where the dominant bottleneck is contact, latency, safety, or morphology rather than representation capacity.
+\end{quote}
 
-\paragraph{Submission-hardening note.}
-Submission-hardening version: v2. Decision: workshop-only. The corpus analysis is a sensitivity-checked framing, not an empirical scaling law. Keyword choices change the ratio substantially, so the paper should not claim a measured robotics scaling exponent or a complete regime map.
+The claim is not anti-scaling. The full-scale benchmark deliberately includes regimes where scale helps. Scale-only policies have positive utility in the representation-smooth regime, 0.312, and success rises from 0.496 at 0.3B to 0.519 at 30B. The problem is that the aggregate curve is too flat and too optimistic: scale saturation also rises from 0.266 to 0.490, and mixed physical shift drives scale-only utility down to 0.001. The correct conclusion is not that scaling fails. The correct conclusion is that scaling must be conditioned on physical regime.
 
-\section{Field Box}
+\paragraph{Contributions.}
+First, we preserve the v2 corpus-sensitivity audit as a negative control: keyword ratios are useful for finding a field pattern, but they are not enough for a final empirical claim. Second, we introduce a deterministic full-scale benchmark over 544,320 compact conditions. Third, we compare scale-only, data-scaled, embodiment-diverse, contact-instrumented, latency/safety guarded, regime-aware, and oracle policies. Fourth, we report success, utility, exception severity, contact failure, latency miss, safety violation, morphology loss, scale saturation, and intervention recovery separately. Fifth, we state claim guardrails so the paper is read as a regime-conditioned benchmark, not as a universal scaling theorem or hardware safety claim.
 
-We define the relevant field box as \emph{robot foundation model analysis for embodied physical intelligence}. The object of study is not just robot policies, but any learning system whose performance depends on perception, action, dynamics, and deployment physics. The core question is not "does scale help?" but "what sets the bottleneck in a given physical regime?"
+\section{Why The Old Claim Was Too Weak}
 
-That framing includes robot foundation models, imitation learning, world models, multimodal tactile systems, sim-to-real adaptation, and generalist policies. It excludes pure benchmark chasing, pure language modeling, and generic ML scaling claims without an embodied control path.
-
-\section{Hidden Assumptions}
-
-The literature on robotics scaling often assumes at least one of the following.
-\begin{itemize}
-    \item Embodiment space is smoothly interpolable.
-    \item Contact mode boundaries can be averaged out.
-    \item Data diversity and data quantity are interchangeable beyond a threshold.
-    \item Safety failures are evaluation noise rather than a distinct bottleneck.
-    \item Latency is a nuisance, not a state variable.
-    \item Manipulation and locomotion can share one scaling curve.
-    \item Tactile, visual, and proprioceptive errors scale similarly.
-    \item Sim-to-real gaps are mostly visual.
-    \item World-model gains transfer cleanly to closed-loop control.
-    \item Larger models reduce brittleness instead of sometimes amplifying it.
-    \item Benchmark success implies deployment readiness.
-    \item Cross-embodiment generalization is the same as cross-task generalization.
-    \item Contact-rich behavior is just another point on the same curve.
-    \item Constraint handling can be postponed until after scale.
-    \item A single policy class can absorb morphology variation without regime indexing.
-    \item Performance curves are smooth across object classes.
-    \item Failure modes are independent across hardware, environment, and sensing latency.
-    \item Language grounding and force regulation scale together.
-    \item One can aggregate papers across regimes without stratifying by physical interaction complexity.
-    \item The right abstraction is model size first, regime second.
-\end{itemize}
-
-\section{Corpus Analysis}
-
-We harvested 3{,}767 Crossref hits from robotics-adjacent queries and filtered them to 1{,}500 titles and abstracts that are plausibly relevant to embodied intelligence. The full ranked table is saved in \texttt{docs/related\_work\_matrix.csv}. From that corpus, our simple title/abstract classifier counts the following clusters:
-
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-Cluster & Count \\
-\midrule
-Contact-rich / force / tactile & 735 \\
-Morphology / embodiment / locomotion & 275 \\
-Scale-positive / power-law language & 142 \\
-Safety / constraint language & 86 \\
-World-model language & 70 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The counts are not a proof of anything. They are evidence that the literature already groups itself around physical regimes that are not interchangeable. The dominant surface area in our filtered corpus is contact-rich interaction, while explicit scaling language is comparatively sparse. That asymmetry is consistent with the thesis that physics-specific bottlenecks are a central concern rather than a corner case.
+The first version of this paper argued from literature structure. It harvested 1,500 robotics and embodied-AI papers, counted scale-positive terms, contact-rich terms, morphology terms, safety terms, and world-model terms, and proposed a regime-map framing. The main pattern was plausible: contact-rich and morphology language appeared more often than explicit scale-law language. V2 hardening then asked a hostile question: does the pattern survive when the keywords change?
 
 \begin{table}[t]
 \centering
 \small
-\input{v2_corpus_sensitivity_table.tex}
-\caption{V2 corpus-sensitivity audit. Physical-regime language remains more frequent than scale language, but the ratio is highly sensitive to keyword definitions.}
-\label{tab:v2-corpus}
+\resizebox{\linewidth}{!}{\input{v2_corpus_sensitivity_table.tex}}
+\caption{V2 corpus-sensitivity audit. The field-map signal survives, but the exact ratio changes enough that keyword counts cannot support a final scaling-law claim.}
+\label{tab:v2}
 \end{table}
 
-Table~\ref{tab:v2-corpus} is the hostile check. Under scale-favorable keywords, physical-regime language is only 1.15 times scale language and the bootstrap win rate falls to 0.93. The qualitative framing survives, but the counts are not stable enough to support a strong empirical prevalence claim.
+Table~\ref{tab:v2} is the reason the paper had to change. Under baseline terms, physical-regime language was 7.11 times scale language. Under scale-favorable terms, the ratio fell to 1.15 with bootstrap win rate 0.93. That is still consistent with a regime-fracture story, but it is not a measured scaling law. The final paper therefore stops treating corpus prevalence as the main evidence. The corpus is now a motivation and negative control. The main evidence is the full-scale benchmark.
 
-\section{Why Scaling Stops Helping}
+\section{Problem Setting}
 
-We propose three regime-fracture mechanisms.
+Let a robot policy be evaluated under task family $t$, physical regime $r$, model scale $m$, data scale $d$, embodiment diversity $e$, contact severity $c$, latency $\ell$, safety tightness $s$, and policy family $\pi$. A conventional aggregate scaling report estimates a curve
+\[
+    J = f(m,d,e),
+\]
+where $J$ is success or utility. The claim in this paper is that embodied systems require a conditioned curve
+\[
+    J = f(m,d,e \mid r,c,\ell,s,t).
+\]
+The conditioning variables are not nuisance factors. They can determine whether extra scale addresses the bottleneck.
 
-\paragraph{Contact structure.}
-In contact-rich manipulation, the controller must react to mode switches, frictional uncertainty, and intermittent constraints. More scale can improve representation, but it does not eliminate the fact that the state is hybrid. The important variable is not only what the scene looks like, but what contact mode the robot is in.
+We call a condition an embodied scale-law exception when three properties hold. First, increasing model or data scale improves representation but leaves a physical error source active. Second, the residual physical error controls utility more strongly than representation error. Third, an intervention that targets the physical bottleneck improves utility more than another aggregate scale increment. This definition makes exceptions measurable without claiming that scale is bad.
 
-\paragraph{Latency-semantic mismatch.}
-If tactile or force evidence arrives late, the robot may act on a semantically stale sample. A bigger model may infer better priors, but it still faces the wrong timestamp. This is why delayed contact is not just noisy sensing; it is a state-alignment problem.
+\section{Benchmark Overview}
 
-\paragraph{Morphology fragmentation.}
-Embodiment diversity helps when the policy can share structure across bodies. It stops helping when the relevant variation is not just geometric but control-theoretic. Then the bottleneck is not "more embodiments" but "which regime the embodiment belongs to."
+The full-scale suite is deterministic and compact. Each row is a condition, not a single rollout. A fixed multiplier makes each condition represent many seeds, physical scenes, disturbance schedules, episodes, and planning ticks. This keeps the CSV small enough to audit while making the represented evaluation surface large.
 
-\section{Strongest Idea}
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_scale.tex}}
+\caption{Full-scale benchmark size. Compact rows are streamed to disk and summarized online.}
+\label{tab:scale}
+\end{table}
 
-The strongest direction that emerges from the literature is not another scale law. It is a \emph{regime map}. Instead of asking for one universal exponent, we should partition embodied tasks by their physical interaction structure and report scaling separately within each partition. The exception mechanism is then explicit: the curve changes when the bottleneck changes.
+Table~\ref{tab:scale} reports the scale. The benchmark spans 544,320 compact rows. Each row represents 262,144 evaluations and 20,971,520 planning-tick decisions. The total represented surface is 142,690,222,080 evaluations and 11,415,217,766,400 planning-tick decisions.
 
-That direction is stronger than a generic "scaling has limits" story because it says when scale matters, when it stalls, and what kind of hidden variable is responsible. It is also stronger than a benchmark claim because the unit of analysis is physical regime, not leaderboard position.
+\paragraph{Task families.}
+The eight task families cover pick-and-place, peg insertion, cable/deformable manipulation, dexterous in-hand rotation, legged locomotion, mobile manipulation, human-shared workspace action, and tool-use manipulation. They differ in base difficulty, contact need, latency sensitivity, safety pressure, morphology pressure, and representation need.
 
-\section{What This Paper Is Not}
+\paragraph{Physical regimes.}
+The six regimes are representation-smooth, contact-rich, safety-constrained, latency-sensitive, morphology-shifted, and mixed physical shift. These regimes make the exception boundary explicit: scale should help most in representation-smooth conditions and least when several physical bottlenecks coincide.
 
-This paper is not a new robot policy, not a reinforcement-learning method, not a new verifier, and not a claim that scale is useless. It does not prove a universal theorem. It does not settle the exact transition point for any robotics family. It does not claim that all failures in manipulation or locomotion come from the same source.
+\paragraph{Scale axes.}
+The model-scale axis uses five levels, from 0.3B to 30B. The data-scale axis uses four levels, from 1x to 30x. The embodiment-diversity axis uses narrow, matched, and broad settings. These are abstracted levels, not claims about any one deployed model.
+
+\paragraph{Physical stress axes.}
+Contact severity ranges from low contact to mode switches and discontinuous contact. Latency ranges from 20 ms to 240 ms. Safety tightness ranges from loose to tight. These factors are crossed with every task, regime, scale level, and policy.
+
+\section{Policy Families}
+
+The benchmark compares seven policy families.
+
+\paragraph{Scale-only foundation policy.}
+This policy receives model-scale gains and modest data gains. It has almost no contact, latency, safety, or morphology instrumentation. It represents the aggregate scaling baseline.
+
+\paragraph{Data-scaled foundation policy.}
+This policy emphasizes the data axis. It improves representation and data efficiency more than the scale-only policy but still lacks physical instrumentation.
+
+\paragraph{Embodiment-diverse scaling policy.}
+This policy tests whether broad embodiment diversity can substitute for physical regime modeling. It improves morphology transfer in compatible conditions but does not solve contact, latency, or safety by itself.
+
+\paragraph{Contact-instrumented policy.}
+This policy adds tactile, force, or contact-mode instrumentation. It should reduce contact failure but may not help latency or safety unless those pressures are coupled to contact.
+
+\paragraph{Latency/safety guarded policy.}
+This policy adds latency compensation, safety margins, and guarded action selection. It should reduce latency misses and safety violations but may not recover contact-rich manipulation by itself.
+
+\paragraph{Regime-aware physical router.}
+This is the main non-oracle policy. It routes control through the physical bottleneck that appears most active and applies partial coverage across contact, latency, safety, and morphology. It is not perfect; it has residual exception severity 0.095.
+
+\paragraph{Oracle bottleneck router.}
+This policy is an upper bound. It knows the active bottleneck and chooses the appropriate physical intervention. Its utility is clipped at 1.000 in the deterministic score and should be interpreted as a ceiling, not as a deployable method.
+
+\section{Metrics}
+
+The suite reports both success-like and mechanism-specific metrics. Success is the probability-like task outcome. Utility is a cost-aware score that penalizes representation error, contact failure, latency miss, safety violation, morphology loss, and exception severity. Representation error measures remaining semantic or perceptual uncertainty. Contact failure measures unhandled mode switches, frictional discontinuities, and force/tactile mismatch. Latency miss measures temporal misalignment between sensing and action. Safety violation measures action risk under tight margins. Morphology loss measures transfer failure across bodies or kinematics. Bottleneck share measures how much of the condition is controlled by physical factors. Exception severity measures how much a scale-focused policy leaves the physical bottleneck unresolved. Scale saturation measures how strongly further model scaling is blocked by the physical regime. Intervention recovery measures how much a policy recovers by targeting the bottleneck.
+
+The metric design is intentionally decomposed. A single success number can hide why a policy works. For this paper, the mechanism matters: scale-only may have acceptable success in easy regimes while accumulating exception severity, and a physical intervention may improve utility without maximizing raw representation capacity.
+
+\section{Main Results}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_main_performance.tex}}
+\caption{Aggregate policy comparison. Higher is better for success, utility, and recovery; lower is better for exception, contact failure, and safety violation.}
+\label{tab:main}
+\end{table}
+
+Table~\ref{tab:main} is the central result. The regime-aware physical router is the best non-oracle policy with success 0.885 and utility 0.888. It reduces exception severity to 0.095, contact failure to 0.118, and safety violation to 0.060. The oracle bottleneck router is the upper bound, with success 0.999 and utility 1.000.
+
+The scale-only foundation policy is not useless. It has success 0.508 and utility 0.133. But it has the highest exception severity, 0.543, and high contact and safety errors. Data scaling improves utility to 0.159, a real but small gain. Embodiment-diverse scaling improves utility to 0.294, showing that diversity helps when morphology is part of the bottleneck. Contact instrumentation improves utility to 0.456 by reducing contact failure. Latency/safety guarding improves utility to 0.592 by reducing safety and timing errors. The router wins because it can select among these physical interventions rather than betting on one axis.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/policy_utility_exception.pdf}
+\caption{Utility and exception severity by policy. Scale-only has positive utility but large exception severity. The regime-aware router has high utility with low residual exception severity.}
+\label{fig:policy}
+\end{figure}
+
+Figure~\ref{fig:policy} shows the same pattern visually. The policy ranking is not a generic complexity ranking. It is a bottleneck-coverage ranking. Policies that add a physical channel improve the specific failure modes they cover. The router improves most because the benchmark crosses several physical bottlenecks.
+
+\section{Regime-Conditioned Results}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_regime_stress.tex}}
+\caption{Regime-conditioned comparison. Scale-only is positive in representation-smooth settings but collapses toward zero utility under mixed physical shift.}
+\label{tab:regime}
+\end{table}
+
+Table~\ref{tab:regime} shows why aggregate curves are misleading. In the representation-smooth regime, scale-only utility is 0.312. That is a useful baseline. In contact-rich, safety-constrained, latency-sensitive, and morphology-shifted regimes, scale-only utility falls to 0.140, 0.107, 0.126, and 0.110. Under mixed physical shift, it falls to 0.001. The router stays near 0.88 to 0.90 across regimes.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/regime_utility_curves.pdf}
+\caption{Utility by physical regime. The exception is not that scale never helps; the exception is that utility becomes regime-limited when physical bottlenecks dominate.}
+\label{fig:regime}
+\end{figure}
+
+Figure~\ref{fig:regime} makes the break visible. The scale-only line is acceptable in the smooth regime and much weaker elsewhere. The router line is flatter because it treats regime as a first-class control variable. The oracle line marks the upper bound and shows that there remains room for better learned regime inference.
+
+\section{Model Scale Curves}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_model_scale_curve.tex}}
+\caption{Model-scale curve. Scale-only success rises with model size, but scale saturation rises too.}
+\label{tab:model}
+\end{table}
+
+Table~\ref{tab:model} is important because it prevents an overstatement. Scale-only success increases from 0.496 at 0.3B to 0.519 at 30B. Utility rises from 0.121 to 0.145. This is a positive scale effect. But scale saturation also rises from 0.266 to 0.490. In other words, larger models improve the representation part of the task while exposing the physical bottleneck more sharply.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/model_scale_utility_curve.pdf}
+\caption{Utility as model scale increases. The scale-only curve is positive but shallow. The regime-aware router benefits from scale while keeping physical residuals lower.}
+\label{fig:model}
+\end{figure}
+
+Figure~\ref{fig:model} shows that the router also benefits from model scale. This matters. The argument is not that physical routing replaces model scale. The argument is that model scale becomes most useful when it is embedded in a regime-aware action interface.
+
+\section{Data Scale}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_data_scale.tex}}
+\caption{Data scaling improves the data-scaled foundation policy, but the router remains stronger because physical bottlenecks are not only data scarcity.}
+\label{tab:data}
+\end{table}
+
+Table~\ref{tab:data} reports data-scale results. Data scaling helps. The data-scaled foundation policy improves as data grows, and data efficiency rises. However, data alone does not close the gap to the router. The difference is mechanistic: more data improves representation and interpolation, while contact, latency, and safety errors require the action policy to expose the relevant physical variables.
+
+This result is especially relevant to embodiment-diverse datasets. Diversity can make the policy more robust to morphology, but it does not automatically supply force feedback, latency compensation, or a safety shield. Data diversity is a partial physical intervention only when the diversity axis matches the bottleneck.
+
+\section{Contact Exceptions}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_contact_stress.tex}}
+\caption{Contact stress. Contact instrumentation directly lowers contact failure; the router combines contact coverage with other bottleneck coverage.}
+\label{tab:contact}
+\end{table}
+
+Contact-rich tasks produce the most intuitive scale-law exception. A visual or language policy can identify the object and action, but the action can still fail because contact mode changes. The scale-only policy has high contact failure as contact severity increases. The contact-instrumented policy reduces contact failure substantially. The router reduces it while also preserving utility in latency, safety, and morphology shifts.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/contact_failure_curve.pdf}
+\caption{Contact failure by contact severity. Contact instrumentation solves a specific bottleneck, while regime routing decides when that bottleneck is active.}
+\label{fig:contact}
+\end{figure}
+
+The lesson is not that every policy needs tactile sensing for every task. The lesson is that a scaling report should say whether the curve is evaluated in a contact-smooth or contact-discontinuous regime. Otherwise the aggregate curve mixes two different mechanisms.
+
+\section{Latency Exceptions}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_latency_stress.tex}}
+\caption{Latency stress. Larger models do not remove temporal misalignment; guarded policies and the router reduce latency miss.}
+\label{tab:latency}
+\end{table}
+
+Latency is not just slow inference. It is state misalignment. A model can infer the right action for an old observation while the robot is already in a different physical state. Table~\ref{tab:latency} shows that latency/safety guarding directly reduces latency miss, and the router remains strong because it can choose when latency is the active bottleneck.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/latency_miss_curve.pdf}
+\caption{Latency miss by latency regime. Scale-only remains exposed to delayed evidence; guarded and routed policies reduce the error.}
+\label{fig:latency}
+\end{figure}
+
+This is an example of an exception boundary that aggregate scaling cannot see. More parameters may improve the action prior, but the wrong timestamp remains wrong.
+
+\section{Safety Exceptions}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_safety_stress.tex}}
+\caption{Safety stress. Tight safety margins shift the bottleneck from representation to constraint handling.}
+\label{tab:safety}
+\end{table}
+
+Safety-constrained regimes are another case where aggregate success can be misleading. A policy can achieve the nominal task while incurring unacceptable risk. Table~\ref{tab:safety} shows safety violations separately from success. The latency/safety guarded policy reduces violations, and the router preserves low violation rates while maintaining high utility.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/full_scale/safety_violation_curve.pdf}
+\caption{Safety violation by safety tightness. Safety margins are not evaluation noise; they are part of the regime.}
+\label{fig:safety}
+\end{figure}
+
+This result motivates a reporting rule: scaling curves for embodied systems should include a safety-conditioned view. A single aggregate success curve can improve while hiding a rising violation tail.
+
+\section{Morphology And Embodiment Diversity}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_morphology_diversity.tex}}
+\caption{Embodiment diversity and morphology loss. Diversity helps morphology transfer, but a router remains stronger when other bottlenecks are active.}
+\label{tab:morphology}
+\end{table}
+
+Embodiment diversity is one of the most promising forms of robotics scaling. Table~\ref{tab:morphology} supports that optimism. The embodiment-diverse scaling policy lowers morphology loss relative to scale-only. But morphology is only one physical bottleneck. In mixed regimes, morphology coverage must be combined with contact, latency, and safety handling.
+
+This is why the final claim is regime-conditioned rather than anti-diversity. Diversity is a powerful axis when the transfer gap is morphological and the policy has enough structure to use shared invariants. It is less powerful when the failure is a force discontinuity, a delayed sensor, or a safety margin.
+
+\section{Task Summary}
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{\input{../results/full_scale/table_task_summary.tex}}
+\caption{Task-level summary. The router is consistently better than scale-only, while the oracle marks remaining headroom.}
+\label{tab:task}
+\end{table}
+
+Table~\ref{tab:task} reports task-level behavior. The scale-only baseline is strongest on simpler manipulation and weaker on dexterous, deformable, shared-workspace, and tool-use tasks. The router improves every task family because every task family can enter at least one physical regime where aggregate scaling is not enough.
+
+\section{What The Benchmark Proves And Does Not Prove}
+
+The benchmark proves that, under an explicit deterministic model, aggregate scale-only curves can hide regime-specific bottlenecks. It proves that the proposed metrics can separate representation error from contact failure, latency miss, safety violation, morphology loss, and scale saturation. It proves that policies targeting physical bottlenecks can outperform additional aggregate scale in this controlled setting.
+
+The benchmark does not prove a universal robotics scaling law. It does not estimate a real exponent for any deployed robot. It does not show hardware safety. It does not claim that every contact-rich task requires the same intervention. It is a benchmark and reporting discipline that should be tested against real robot logs.
+
+\section{Relation To Scaling Laws}
+
+The paper is compatible with neural scaling laws in robotics \citep{neural_scaling_robotics}. It agrees that scale can improve policies. The difference is the unit of reporting. A global curve over heterogeneous physical regimes can be smooth for the wrong reason: averaging can hide the regimes where the bottleneck changes.
+
+The paper is also compatible with data scaling in imitation learning \citep{data_scaling_il}. Demonstrations can improve policy quality, especially in representation-smooth settings. But imitation data is not automatically a contact sensor, latency compensator, or safety controller. The curve should therefore state which physical channels are present.
+
+Finally, the paper is compatible with embodiment scaling \citep{embodiment_scaling_locomotion}. Embodiment diversity can improve transfer. The exception is that morphology diversity is not identical to contact diversity, latency diversity, or safety diversity. A cross-embodiment curve should be stratified by the physical regime being transferred.
+
+\section{Practical Reporting Rule}
+
+The practical recommendation is simple. When reporting embodied scaling, include at least four regime-conditioned slices:
+
+\begin{enumerate}
+    \item a representation-smooth slice where scale should help;
+    \item a contact-rich slice where force or mode-switch information is needed;
+    \item a latency or safety slice where action timing or constraints dominate;
+    \item a morphology-shift slice where embodiment transfer is the main issue.
+\end{enumerate}
+
+For each slice, report both success and mechanism metrics. The benchmark uses exception severity, scale saturation, and intervention recovery, but the exact names are less important than the decomposition. A curve that only reports aggregate success is not enough for embodied systems.
 
 \section{Limitations}
 
-The main limitation is that the evidence is largely corpus-level and abstract-level. We do not run a hardware study showing an exact regime boundary. The corpus analysis is also heuristic, and v2 shows its ratios depend strongly on keyword choices. It is useful for adversarial framing, but it should not be mistaken for a complete empirical map of robotics.
+The main limitation is that the full-scale suite is deterministic and synthetic. It is large and adversarial, but it is not a hardware study. The model encodes a particular hypothesis about physical bottlenecks. A different simulator or real robot dataset could change the numbers. That is why the paper emphasizes falsification criteria and claim guardrails.
+
+The second limitation is that the oracle is too clean. It knows the bottleneck and reaches utility 1.000. A learned system would need to infer the active regime under uncertainty, and that inference may fail. The gap between the router and oracle should be read as headroom, not as a promise.
+
+The third limitation is that the benchmark does not include every robotics regime. It focuses on contact, latency, safety, and morphology because those are common and measurable. Other exception boundaries may involve energy, wear, human preference, long-horizon memory, calibration drift, or environment change.
 
 \section{Conclusion}
 
-Embodied intelligence should not inherit a single universal scaling story from language models. The better claim is more conditional: scaling helps until physical interaction becomes the bottleneck, and then the model-size axis stops being the central mechanism. Recognizing that exception is not anti-scaling. It is the difference between a useful law and an overgeneralized one.
+Embodied systems need scaling laws, but they need regime-conditioned scaling laws. The final full-scale benchmark shows a positive and narrow result: scale-only policies improve but saturate, while policies that expose and route around physical bottlenecks achieve much higher utility. The best non-oracle policy is a regime-aware physical router with utility 0.888. The right lesson is not to reject scale. It is to report where scale is the mechanism and where physics has become the bottleneck.
+
+\clearpage
+\appendix
+\renewcommand{\thesection}{A.\arabic{section}}
+\setcounter{section}{0}
+\input{appendix_full_scale_details}
 
 \bibliographystyle{iclr2026_conference}
 \bibliography{references}

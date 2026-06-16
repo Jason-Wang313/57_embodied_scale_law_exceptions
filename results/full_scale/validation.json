@@ -1,0 +1,48 @@
+{
+  "paper": 57,
+  "status": "final_v3_full_scale_submission_candidate",
+  "canonical_pdf": "C:/Users/wangz/Downloads/57.pdf",
+  "pages": 25,
+  "file_size_bytes": 323833,
+  "sha256": "2A252C8555C580E358C98259635D74D254A4B57F55A64F79B90BAF48CD8F52C7",
+  "built_at": "2026-06-16 13:57:47 +01:00",
+  "local_pdf_removed": true,
+  "desktop_pdf_absent": true,
+  "visual_qa": {
+    "rendered_from": "C:/Users/wangz/Downloads/57.pdf",
+    "pages_rendered": 25,
+    "sampled_pages": [1, 4, 7, 13, 20, 25],
+    "result": "pass"
+  },
+  "full_scale": {
+    "condition_rows": 544320,
+    "expected_condition_rows": 544320,
+    "row_count_ok": true,
+    "represented_evaluations": 142690222080,
+    "represented_planning_tick_decisions": 11415217766400,
+    "best_non_oracle_policy": "regime_aware_router",
+    "best_non_oracle_utility": 0.88778,
+    "oracle_utility": 1.0
+  },
+  "policy_metrics": {
+    "regime_aware_router": {
+      "success": 0.885084,
+      "utility": 0.88778,
+      "exception_severity": 0.094621,
+      "contact_failure": 0.117679,
+      "latency_miss": 0.094355,
+      "safety_violation": 0.060081,
+      "morphology_loss": 0.09487
+    },
+    "scale_only_foundation": {
+      "success": 0.507689,
+      "utility": 0.132719,
+      "exception_severity": 0.543133
+    },
+    "oracle_bottleneck_router": {
+      "success": 0.998887,
+      "utility": 1.0,
+      "exception_severity": 0.0
+    }
+  }
+}

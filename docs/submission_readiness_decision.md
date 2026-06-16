@@ -1,7 +1,7 @@
 # Submission Readiness Decision
 
-Decision: workshop-only.
+Decision: final v3 full-scale submission candidate.
 
-Rationale: The regime-map idea is useful and falsifiable, but the evidence is corpus-level and keyword-sensitive. It is not an archival empirical scaling-law paper.
+Rationale: the paper now has a 25-page manuscript, a 544,320-row deterministic full-scale benchmark, generated tables and figures, explicit negative controls, claim guardrails, a final build script with a page-count gate, and visual QA of the exported Downloads PDF. The supported claim is narrow and defensible: embodied scaling should be reported by physical regime because contact, latency, safety, and morphology can become dominant bottlenecks.
 
-Required recovery for stronger submission: stratified robot benchmarks, fitted scaling curves per physical regime, contact/safety/latency labels, and ablations showing when model size stops being the dominant bottleneck.
+Remaining limitation: no real robot validation. This is stated directly and should be treated as future work, not hidden as missing evidence.
