@@ -26,9 +26,10 @@ V2 is preserved as a negative control. It showed that keyword-ratio corpus evide
 - Canonical PDF: `C:/Users/wangz/Downloads/57.pdf`.
 - Pages: 25.
 - Size: 323,833 bytes.
-- SHA256: `2A252C8555C580E358C98259635D74D254A4B57F55A64F79B90BAF48CD8F52C7`.
-- Built at: 2026-06-16 13:57:47 +01:00.
-- Visual QA: rendered and inspected pages 1, 4, 7, 13, 20, and 25 from the Downloads PDF.
+- SHA256: `94A0283258553BFBD177AC2CF0B53091493967EAADE7029345584443A7965220`.
+- Built at: 2026-06-19 22:18:32 +08:00.
+- Visual QA: rendered and inspected highlighted pages 1, 2, 3, 4, 5, 6, 7, 8, 9, and 25 from the Downloads PDF.
+- Visual hardening: VLA-v4-style boxed links, with green citation/URL borders and red internal-reference borders.
 - Local generated `paper/main.pdf`: removed after export.
 - Desktop PDF copy: absent.
 
